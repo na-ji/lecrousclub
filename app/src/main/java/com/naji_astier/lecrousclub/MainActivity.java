@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
         mDetailTextView = (TextView) findViewById(R.id.detail);
+        final Button cancelButton = (Button) findViewById(R.id.button_cancel);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements
         //findViewById(R.id.disconnect_button).setOnClickListener(this);
         findViewById(R.id.button_yes).setOnClickListener(this);
         findViewById(R.id.button_no).setOnClickListener(this);
+        findViewById(R.id.button_cancel).setOnClickListener(this);
 
         // [START config_signin]
         // Configure Google Sign In
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements
         Date date = new Date();
         today = new SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH).format(date);
         TextView todaysDate = (TextView) findViewById(R.id.todays_date);
-        todaysDate.setText(today);
+        todaysDate.setText(new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRENCH).format(date));
 
         // [START auth_state_listener]
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -145,9 +148,16 @@ public class MainActivity extends AppCompatActivity implements
                             Log.d(TAG, "Value is: " + value);
 
                             if (value == null) {
+                                cancelButton.setVisibility(Button.GONE);
                                 askWantToParticipate.setVisibility(LinearLayout.VISIBLE);
                             } else {
                                 askWantToParticipate.setVisibility(LinearLayout.GONE);
+                                if (value)
+                                    cancelButton.setText(getString(R.string.cancel_participation));
+                                else
+                                    cancelButton.setText(getString(R.string.cancel_no_participation));
+
+                                cancelButton.setVisibility(Button.VISIBLE);
                             }
                         }
 
@@ -327,7 +337,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     public void setParticipationTo(Boolean value) {
-        database.getReference("resas/" + today + "/" + user.getDisplayName()).setValue(value);
+        if (value == null) {
+            database.getReference("resas/" + today + "/" + user.getDisplayName()).removeValue();
+        } else {
+            database.getReference("resas/" + today + "/" + user.getDisplayName()).setValue(value);
+        }
     }
 
     @Override
@@ -339,6 +353,8 @@ public class MainActivity extends AppCompatActivity implements
             setParticipationTo(true);
         } else if (i == R.id.button_no) {
             setParticipationTo(false);
+        } else if (i == R.id.button_cancel) {
+            setParticipationTo(null);
         }
         /* else if (i == R.id.sign_out_button) {
             signOut();

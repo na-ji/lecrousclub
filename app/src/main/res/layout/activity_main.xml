@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            android:id="@+id/todays_date" />
+            android:id="@+id/todays_date"
+            android:textAlignment="center" />
 
         <LinearLayout
             android:orientation="vertical"
@@ -70,13 +71,20 @@
             </LinearLayout>
         </LinearLayout>
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/sign_in_button"
+            android:layout_alignParentStart="true"
+            android:id="@+id/button_cancel"
+            android:visibility="gone" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/detail"
             android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:text="Caca" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
     </LinearLayout>
 

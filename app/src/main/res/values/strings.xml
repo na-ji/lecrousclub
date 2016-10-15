@@ -8,4 +8,6 @@
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="want_to_participate">Vas-tu manger au Crous ce midi ?</string>
+    <string name="cancel_participation">Annuler ma participation</string>
+    <string name="cancel_no_participation">Annuler ma non participation</string>
 </resources>
