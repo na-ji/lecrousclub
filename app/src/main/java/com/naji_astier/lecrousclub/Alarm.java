@@ -14,13 +14,20 @@ public class Alarm {
         Intent intent1 = new Intent(context, AlarmReceiver.class);
         PendingIntent alarmIntent = PendingIntent.getBroadcast(context, 0, intent1, 0);
 
+        int hour = 10;
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        if (calendar.get(Calendar.HOUR_OF_DAY) > hour)
+        {
+            calendar.set(Calendar.DAY_OF_MONTH, calendar.get(Calendar.DAY_OF_MONTH) + 1);
+        }
+        calendar.set(Calendar.HOUR_OF_DAY, 10);
 
         // With setInexactRepeating(), you have to use one of the AlarmManager interval
         // constants--in this case, AlarmManager.INTERVAL_DAY.
-        alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, alarmIntent);
+        alarmMgr.cancel(alarmIntent);
+        alarmMgr
+                .setWindow(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 300000L, alarmIntent)
+        ;
     }
 }
