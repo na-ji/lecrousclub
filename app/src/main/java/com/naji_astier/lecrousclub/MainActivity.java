@@ -123,6 +123,10 @@ public class MainActivity extends AppCompatActivity implements
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
 
+                    FirebaseMessaging.getInstance().subscribeToTopic("notifications");
+                    final String token = FirebaseInstanceId.getInstance().getToken();
+                    //Log.d(TAG, "Token: " + token);
+
                     // We write the user name in database if it does not exist
                     final DatabaseReference userNameRef = database.getReference("users/" + user.getUid());
                     userNameRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -130,11 +134,10 @@ public class MainActivity extends AppCompatActivity implements
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             // This method is called once with the initial value and again
                             // whenever data at this location is updated.
-                            String value = dataSnapshot.getValue(String.class);
-                            //Log.d(TAG, "Value is: " + value);
-                            if (null == value) {
-                                userNameRef.setValue(user.getDisplayName());
+                            if (!dataSnapshot.exists()) {
+                                userNameRef.child("name").setValue(user.getDisplayName());
                             }
+                            userNameRef.child("token").setValue(token);
                         }
 
                         @Override
@@ -205,11 +208,6 @@ public class MainActivity extends AppCompatActivity implements
                             Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                         }
                     });
-
-                    FirebaseMessaging.getInstance().subscribeToTopic("notifications");
-                    String token = FirebaseInstanceId.getInstance().getToken();
-                    Log.d(TAG, "Token: " + token);
-
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
