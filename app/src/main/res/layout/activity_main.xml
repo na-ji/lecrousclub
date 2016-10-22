@@ -79,12 +79,44 @@
             android:id="@+id/button_cancel"
             android:visibility="gone" />
 
-        <TextView
+        <TableLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/detail"
-            android:layout_weight="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
+            android:layout_height="match_parent"
+            android:stretchColumns="0,1">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/headRealBros" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/headFalseBros" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bodyRealBros" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/bodyFalseBros" />
+            </TableRow>
+
+        </TableLayout>
 
     </LinearLayout>
 

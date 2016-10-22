@@ -58,7 +58,10 @@ public class MainActivity extends AppCompatActivity implements
 
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
-    private TextView mDetailTextView;
+    private TextView mRealBrosHeadTextView;
+    private TextView mRealBrosBodyTextView;
+    private TextView mFalseBrosHeadTextView;
+    private TextView mFalseBrosBodyTextView;
 
     private FirebaseUser user;
     private String today;
@@ -70,7 +73,10 @@ public class MainActivity extends AppCompatActivity implements
 
         // Views
         mStatusTextView = (TextView) findViewById(R.id.status);
-        mDetailTextView = (TextView) findViewById(R.id.detail);
+        mRealBrosHeadTextView = (TextView) findViewById(R.id.headRealBros);
+        mRealBrosBodyTextView = (TextView) findViewById(R.id.bodyRealBros);
+        mFalseBrosHeadTextView = (TextView) findViewById(R.id.headFalseBros);
+        mFalseBrosBodyTextView = (TextView) findViewById(R.id.bodyFalseBros);
         final Button cancelButton = (Button) findViewById(R.id.button_cancel);
 
         // Button listeners
@@ -189,17 +195,23 @@ public class MainActivity extends AppCompatActivity implements
                     usersParticipationRef.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            final StringBuffer partipants = new StringBuffer("Les vrais bros du jour :");
+                            final StringBuffer participating = new StringBuffer("");
+                            final StringBuffer notParticipating = new StringBuffer("");
                             for (DataSnapshot userSnapshot: dataSnapshot.getChildren()) {
                                 Boolean value = userSnapshot.getValue(Boolean.class);
+                                String userName = userSnapshot.getKey();
                                 if (value) {
-                                    String userName = userSnapshot.getKey();
-                                    partipants.append("\n - " + userName);
+                                    participating.append("\n - " + userName);
+                                } else {
+                                    notParticipating.append("\n - " + userName);
                                 }
                             }
 
-                            //Log.w(TAG, partipants.toString());
-                            mDetailTextView.setText(partipants.toString());
+                            //Log.w(TAG, participants.toString());
+                            mRealBrosHeadTextView.setText("Les vrais bros");
+                            mFalseBrosHeadTextView.setText("Les faux frères");
+                            mRealBrosBodyTextView.setText(participating.toString());
+                            mFalseBrosBodyTextView.setText(notParticipating.toString());
                         }
 
                         @Override
@@ -340,7 +352,10 @@ public class MainActivity extends AppCompatActivity implements
             //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
         } else {
             mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
+            mRealBrosHeadTextView.setText(null);
+            mFalseBrosHeadTextView.setText(null);
+            mRealBrosBodyTextView.setText(null);
+            mFalseBrosBodyTextView.setText(null);
 
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             //findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
