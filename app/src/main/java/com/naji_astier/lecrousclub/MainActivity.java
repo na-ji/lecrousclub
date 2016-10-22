@@ -1,12 +1,8 @@
 package com.naji_astier.lecrousclub;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v4.app.NotificationCompat;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -133,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements
                             // This method is called once with the initial value and again
                             // whenever data at this location is updated.
                             String value = dataSnapshot.getValue(String.class);
-                            Log.d(TAG, "Value is: " + value);
+                            //Log.d(TAG, "Value is: " + value);
                             if (null == value) {
                                 userNameRef.setValue(user.getDisplayName());
                             }
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements
                             // This method is called once with the initial value and again
                             // whenever data at this location is updated.
                             Boolean value = dataSnapshot.getValue(Boolean.class);
-                            Log.d(TAG, "Value is: " + value);
+                            //Log.d(TAG, "Value is: " + value);
 
                             if (value == null) {
                                 cancelButton.setVisibility(Button.GONE);
@@ -197,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements
                                 }
                             }
 
-                            Log.w(TAG, partipants.toString());
+                            //Log.w(TAG, partipants.toString());
                             mDetailTextView.setText(partipants.toString());
                         }
 
@@ -207,6 +205,10 @@ public class MainActivity extends AppCompatActivity implements
                             Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                         }
                     });
+
+                    FirebaseMessaging.getInstance().subscribeToTopic("notifications");
+                    String token = FirebaseInstanceId.getInstance().getToken();
+                    Log.d(TAG, "Token: " + token);
 
                 } else {
                     // User is signed out
@@ -218,8 +220,9 @@ public class MainActivity extends AppCompatActivity implements
             }
         };
         // [END auth_state_listener]
-
-        Intent i = new Intent(this, AlarmService.class);
+        Intent i = new Intent(this, MyFirebaseInstanceIDService.class);
+        startService(i);
+        i = new Intent(this, MyFirebaseMessagingService.class);
         startService(i);
     }
 
