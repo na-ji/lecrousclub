@@ -37,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -106,6 +107,11 @@ public class MainActivity extends AppCompatActivity implements
         askWantToParticipate.setVisibility(LinearLayout.GONE);
 
         Date date = new Date();
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour > 14)
+        {
+            date.setTime(date.getTime() + 86400000);
+        }
         today = new SimpleDateFormat("dd-MM-yyyy", Locale.FRENCH).format(date);
         TextView todaysDate = (TextView) findViewById(R.id.todays_date);
         todaysDate.setText(new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRENCH).format(date));
